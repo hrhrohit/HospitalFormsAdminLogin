@@ -29,10 +29,8 @@ export const addUser = async (userData, Collectionname) => {
   }
 };
 
-export const fetchDocumentsByDate = async (surgeryDate) => {
-  const q = query(collection(db, "DoctorDetails"), 
-  where("surgeryDate", "==", surgeryDate)
-);
+export const fetchAllNames = async (collectionName) => {
+  const q = query(collection(db, collectionName));
   const querySnapshot = await getDocs(q);
   const documents = [];
   querySnapshot.forEach((doc) => {
@@ -40,7 +38,6 @@ export const fetchDocumentsByDate = async (surgeryDate) => {
   });
   return documents;
 };
-
 export const updateDocument = async (docId, updateData, collectionName) => {
   const documentRef = doc(db, collectionName, docId);
   try {
@@ -50,4 +47,9 @@ export const updateDocument = async (docId, updateData, collectionName) => {
     console.error("Error updating document: ", error);
     throw error; // Rethrow to handle it in the calling component
   }
+};
+
+export const fetchAllDetails = async (collectionName) => {
+  const querySnapshot = await getDocs(collection(db, collectionName));
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };

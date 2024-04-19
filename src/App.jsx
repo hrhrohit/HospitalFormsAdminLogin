@@ -6,6 +6,7 @@ import CirculatingNurseComponent from './Components/CirculatingNurseComponent';
 import AnesthetistComponent from './Components/AnesthetistComponent';
 import ScrubNurseComponent from './Components/ScrubNurseComponent';
 import AnesthetistTechnicianComponent from './Components/AnesthetistTechnicianComponent';
+import FullDetailsComponent from './Components/FullDetailsComponent'; // Make sure to import the new component
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/anesthetist" element={<AnesthetistComponent />} />
           <Route path="/scrub-nurse" element={<ScrubNurseComponent />} />
           <Route path="/anesthetist-technician" element={<AnesthetistTechnicianComponent />} />
+          <Route path="/full-details" element={<FullDetailsComponent />} />
         </Routes>
       </BrowserRouter>
     </>

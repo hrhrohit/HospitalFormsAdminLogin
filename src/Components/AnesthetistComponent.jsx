@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
-import { addUser } from '../firebaseConfig';
-
+import React, { useState, useEffect } from 'react';
+import { addUser, fetchAllNames, updateDocument } from '../firebaseConfig';
+import Modal from './Modals/modal';  // Ensure this Modal is generic enough for reuse
 
 function AnesthetistComponent() {
   const [anesthetistName, setAnesthetistName] = useState('');
   const [anesthetistPhone, setAnesthetistPhone] = useState('');
+  const [anesthetists, setAnesthetists] = useState([]);
+  const [editingAnesthetist, setEditingAnesthetist] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  useEffect(() => {
+    if (showDetails) {
+      const fetchData = async () => {
+        const docs = await fetchAllNames("AnesthetistDetails"); // Adjust to your actual function if different
+        setAnesthetists(docs);
+      };
+      fetchData();
+    }
+  }, [showDetails]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -13,12 +26,23 @@ function AnesthetistComponent() {
         name: anesthetistName,
         phone: anesthetistPhone
       }, "AnesthetistDetails");
-      setAnesthetistName("")
-      setAnesthetistPhone("")
+      if (showDetails) {
+        setAnesthetists([...anesthetists, { id: newDocId, name: anesthetistName, phone: anesthetistPhone }]);
+      }
+      setAnesthetistName('');
+      setAnesthetistPhone('');
       console.log('Document added with ID:', newDocId);
     } catch (error) {
       console.error('Error adding document:', error);
     }
+  };
+
+  const handleEdit = (anesthetist) => {
+    setEditingAnesthetist(anesthetist);
+  };
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -27,7 +51,7 @@ function AnesthetistComponent() {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="anesthetistName" className="block text-gray-700 text-sm font-bold mb-2">
-            Anesthetist Name
+            Anesthetist's Name
           </label>
           <input
             type="text"
@@ -41,7 +65,7 @@ function AnesthetistComponent() {
         </div>
         <div className="mb-4">
           <label htmlFor="anesthetistPhone" className="block text-gray-700 text-sm font-bold mb-2">
-            Anesthetist Phone Number
+            Anesthetist's Phone Number
           </label>
           <input
             type="tel"
@@ -57,6 +81,32 @@ function AnesthetistComponent() {
           Submit
         </button>
       </form>
+      <button onClick={toggleDetails} className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        {showDetails ? 'Hide All Details' : 'Show All Details'}
+      </button>
+      {showDetails && (
+        <table className="w-full mt-4 text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="py-3 px-6">Name</th>
+              <th scope="col" className="py-3 px-6">Phone</th>
+              <th scope="col" className="py-3 px-6">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {anesthetists.map(anesthetist => (
+              <tr key={anesthetist.id} className="bg-white border-b hover:bg-gray-50">
+                <td className="py-4 px-6">{anesthetist.name}</td>
+                <td className="py-4 px-6">{anesthetist.phone}</td>
+                <td className="py-4 px-6">
+                  <button onClick={() => handleEdit(anesthetist)} className="font-medium text-blue-600 hover:underline">Edit</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {editingAnesthetist && <Modal person={editingAnesthetist} onSave={(data) => updateDocument(editingAnesthetist.id, data, "AnesthetistDetails")} onClose={() => setEditingAnesthetist(null)} />}
     </div>
   );
 }

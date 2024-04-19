@@ -11,6 +11,7 @@ function Navbar() {
         <Link to="/scrub-nurse" className="px-4 py-2 bg-purple-500 rounded hover:bg-purple-700 transition duration-300">Scrub Nurse</Link>
         <Link to="/anesthetist" className="px-4 py-2 bg-red-500 rounded hover:bg-red-700 transition duration-300">Anesthetist</Link>
         <Link to="/anesthetist-technician" className="px-4 py-2 bg-yellow-500 rounded hover:bg-yellow-700 transition duration-300">Anesthetist Technician</Link>
+        <Link to="/full-details" className="px-4 py-2 bg-orange-500 rounded hover:bg-orange-700 transition duration-300">Full Details</Link>
       </div>
     </nav>
   );

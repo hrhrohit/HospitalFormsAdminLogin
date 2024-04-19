@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
-import { addUser } from '../firebaseConfig';
-
+import React, { useState, useEffect } from 'react';
+import { addUser, fetchAllNames, updateDocument } from '../firebaseConfig';
+import Modal from './Modals/modal'; // Make sure Modal is adaptable for both nurses and doctors
 
 function CirculatingNurseComponent() {
-  // State to hold the inputs
   const [nurseName, setNurseName] = useState('');
   const [nursePhone, setNursePhone] = useState('');
+  const [nurses, setNurses] = useState([]);
+  const [editingNurse, setEditingNurse] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
 
-  // Handle form submission
+  // Fetch nurse data when showDetails is true
+  useEffect(() => {
+    if (showDetails) {
+      const fetchData = async () => {
+        const docs = await fetchAllNames("CirculatingNurseDetails"); // Adjust to your actual function if different
+        setNurses(docs);
+      };
+      fetchData();
+    }
+  }, [showDetails]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -15,12 +27,23 @@ function CirculatingNurseComponent() {
         name: nurseName,
         phone: nursePhone
       }, "CirculatingNurseDetails");
-      setNurseName("")
-      setNursePhone("")
+      if (showDetails) {
+        setNurses([...nurses, { id: newDocId, name: nurseName, phone: nursePhone }]);
+      }
+      setNurseName('');
+      setNursePhone('');
       console.log('Document added with ID:', newDocId);
     } catch (error) {
       console.error('Error adding document:', error);
     }
+  };
+
+  const handleEdit = (nurse) => {
+    setEditingNurse(nurse);
+  };
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -29,7 +52,7 @@ function CirculatingNurseComponent() {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="nurseName" className="block text-gray-700 text-sm font-bold mb-2">
-            Circulating Nurse
+            Nurse's Name
           </label>
           <input
             type="text"
@@ -43,7 +66,7 @@ function CirculatingNurseComponent() {
         </div>
         <div className="mb-4">
           <label htmlFor="nursePhone" className="block text-gray-700 text-sm font-bold mb-2">
-            Nurse Phone Number
+            Nurse's Phone Number
           </label>
           <input
             type="tel"
@@ -59,6 +82,32 @@ function CirculatingNurseComponent() {
           Submit
         </button>
       </form>
+      <button onClick={toggleDetails} className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+        {showDetails ? 'Hide All Details' : 'Show All Details'}
+      </button>
+      {showDetails && (
+        <table className="w-full mt-4 text-sm text-left text-gray-500">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th scope="col" className="py-3 px-6">Name</th>
+              <th scope="col" className="py-3 px-6">Phone</th>
+              <th scope="col" className="py-3 px-6">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {nurses.map(nurse => (
+              <tr key={nurse.id} className="bg-white border-b hover:bg-gray-50">
+                <td className="py-4 px-6">{nurse.name}</td>
+                <td className="py-4 px-6">{nurse.phone}</td>
+                <td className="py-4 px-6">
+                  <button onClick={() => handleEdit(nurse)} className="font-medium text-blue-600 hover:underline">Edit</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {editingNurse && <Modal person={editingNurse} onSave={(data) => updateDocument(editingNurse.id, data, "CirculatingNurseDetails")} onClose={() => setEditingNurse(null)} />}
     </div>
   );
 }
