@@ -56,7 +56,7 @@ function FullDetailsComponent() {
       <table className="w-full mt-4 text-sm text-left text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th>Patient Name</th><th>Age</th><th>Sex</th><th>Surgeon</th>
+            <th>Mr No</th><th>Patient Name</th><th>Age</th><th>Sex</th><th>Surgeon</th>
             <th>Surgical Procedure</th><th>Hospital Number</th><th>Surgery Date</th>
             <th>Doctor Submit Time</th><th>Anesthetist</th><th>Anesthetist Technician</th>
             <th>OT</th><th>Surgery Time</th><th>Anesthetist Submit Time</th>
@@ -67,7 +67,7 @@ function FullDetailsComponent() {
         <tbody>
           {filteredDetails.map((detail, index) => (
             <tr key={index} className="bg-white border-b hover:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(detail)}>
-              <td>{detail.patientName}</td><td>{detail.age}</td><td>{detail.sex}</td>
+              <td>{detail.mrNo}</td><td>{detail.patientName}</td><td>{detail.age}</td><td>{detail.sex}</td>
               <td>{detail.surgeon}</td><td>{detail.surgicalProcedure}</td>
               <td>{detail.hospitalNumber}</td><td>{new Date(detail.surgeryDate).toLocaleDateString()}</td>
               <td>{detail.doctorSubmitTime}</td><td>{detail.anesthetist}</td>
