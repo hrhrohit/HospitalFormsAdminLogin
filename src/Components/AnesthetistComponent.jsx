@@ -8,7 +8,7 @@ function AnesthetistComponent() {
   const [anesthetists, setAnesthetists] = useState([]);
   const [editingAnesthetist, setEditingAnesthetist] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-
+  const [success, setSuccess] = useState(false)
   useEffect(() => {
     if (showDetails) {
       const fetchData = async () => {
@@ -32,6 +32,9 @@ function AnesthetistComponent() {
       setAnesthetistName('');
       setAnesthetistPhone('');
       console.log('Document added with ID:', newDocId);
+      setTimeout(() => {
+        setSuccess(false)
+      }, 3000);
     } catch (error) {
       console.error('Error adding document:', error);
     }
@@ -80,6 +83,9 @@ function AnesthetistComponent() {
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Submit
         </button>
+        {success && <div className="p-3 bg-green-200 text-green-800 rounded-md mb-3 mt-2">
+          Submission successful!
+        </div>}
       </form>
       <button onClick={toggleDetails} className="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         {showDetails ? 'Hide All Details' : 'Show All Details'}

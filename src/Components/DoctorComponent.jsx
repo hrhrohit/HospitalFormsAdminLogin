@@ -8,6 +8,7 @@ function DoctorComponent() {
   const [doctors, setDoctors] = useState([]);
   const [editingDoctor, setEditingDoctor] = useState(null);
   const [showDetails, setShowDetails] = useState(false); // State to track visibility of doctor details
+  const [success, setSuccess] = useState(false)
 
   useEffect(() => {
     if (showDetails) {  // Only fetch details if they are to be shown
@@ -31,6 +32,10 @@ function DoctorComponent() {
       }
       setDoctorName('');
       setDoctorPhone('');
+      setSuccess(true)
+      setTimeout(() => {
+        setSuccess(false)
+      }, 3000);
     } catch (error) {
       console.error('Error adding document:', error);
     }
@@ -79,6 +84,9 @@ function DoctorComponent() {
         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
           Submit
         </button>
+        {success && <div className="p-3 bg-green-200 text-green-800 rounded-md mb-3 mt-2">
+          Submission successful!
+        </div>}
       </form>
       <button onClick={toggleDetails} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
         {showDetails ? 'Hide All Details' : 'Show All Details'}
