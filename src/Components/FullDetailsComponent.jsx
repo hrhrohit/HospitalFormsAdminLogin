@@ -69,7 +69,7 @@ function FullDetailsComponent() {
             <tr key={index} className="bg-white border-b hover:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(detail)}>
               <td>{detail.mrNo}</td><td>{detail.patientName}</td><td>{detail.age}</td><td>{detail.sex}</td>
               <td>{detail.surgeon}</td><td>{detail.surgicalProcedure}</td>
-              <td>{detail.hospitalNumber}</td><td>{new Date(detail.surgeryDate).toLocaleDateString()}</td>
+              <td>{detail.department}</td><td>{new Date(detail.surgeryDate).toLocaleDateString()}</td>
               <td>{detail.doctorSubmitTime}</td><td>{detail.anesthetist}</td>
               <td>{detail.anesthetistTechnician}</td><td>{detail.ot}</td>
               <td>{detail.surgeryTime}</td><td>{detail.anesthetistSubmitTime}</td>
